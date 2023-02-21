@@ -7,7 +7,7 @@ services:
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       LAVALINK_PASSWORD: ${LAVALINK_PASSWORD}
-      LAVALINK_IP: lavalink
+      LAVALINK_HOST: lavalink
       LAVALINK_PORT: 2333
     depends_on:
       - lavalink
