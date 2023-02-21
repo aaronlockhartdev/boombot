@@ -1,0 +1,30 @@
+[build-system]
+requires = ["flit_core >=3.2,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "boombot"
+authors = [
+    {name = "aaronlockhartdev", email = "aaronlockhartdev@gmail.com"},
+    {name = "getinski"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+classifiers = [
+    "License :: OSI Approved :: MIT License", 
+    "Private :: Do Not Upload"
+]
+dependencies = [
+    "hikari[speedups] >=2.0.0.dev116",
+    "uvloop",
+    "hikari-lightbulb >=2.3.1",
+    "hikari-miru >=3.0.2",
+    "openai-whisper @ git+https://github.com/openai/whisper.git"
+]
+dynamic = ["version", "description"]
+
+[project.urls]
+Source = "https://github.com/aaronlockhartdev/boombot"
+
+[project.scripts]
