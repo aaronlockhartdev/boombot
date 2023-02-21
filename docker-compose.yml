@@ -11,14 +11,12 @@ services:
       LAVALINK_PORT: 2333
     depends_on:
       lavalink:
-        condition: service_healthy
+        condition: service_started
 
   lavalink:
     image: fredboat/lavalink:dev
     volumes:
       - ./lavalink.yml:/opt/Lavalink/application.yml
-    healthcheck:
-      test: ["CMD-SHELL", "exit 0"]
 
 
 
