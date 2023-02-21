@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  boombot:
+    build: .
+    links:
+      - lavalink
+    environment:
+      DISCORD_TOKEN: ${DISCORD_TOKEN}
+      LAVALINK_PASSWORD: ${LAVALINK_PASSWORD}
+      LAVALINK_IP: lavalink
+      LAVALINK_PORT: 2333
+    depends_on:
+      - lavalink
+
+  lavalink:
+    image: fredboat/lavalink:dev
+    volumes:
+      - ./lavalink.yml:/opt/lavalink/application.yml:ro
+
+
+    

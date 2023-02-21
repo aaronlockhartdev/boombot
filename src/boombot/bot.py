@@ -4,20 +4,30 @@ import uvloop
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 import os
+import logging
 
 import hikari
+import lightbulb
 
-bot = hikari.GatewayBot(token=os.getenv("TOKEN"))
+from hikari import Intents
+
+INTENTS = Intents.ALL_GUILDS_UNPRIVILEGED
+
+bot = lightbulb.BotApp(
+    os.getenv('DISCORD_TOKEN'),
+    intents=INTENTS,
+    banner=None,
+    logs="INFO"
+)
 
 @bot.listen()
-async def ping(event: hikari.GuildMessageCreateEvent) -> None:
-    """If a non-bot user mentions your bot, respond with 'Pong!'."""
+async def starting_load_extensions(_: hikari.StartingEvent) -> None:
+    """Load the music extension when Bot starts."""
+    bot.load_extensions("boombot.extensions.lavasnek")
 
-    # Do not respond to bots nor webhooks pinging us, only user accounts
-    if not event.is_human:
-        return
-
-    me = bot.get_me()
-
-    if me.id in event.message.user_mentions_ids:
-        await event.message.respond("Pong!")
+@bot.command()
+@lightbulb.command("ping", description="Latency test.")
+@lightbulb.implements(lightbulb.SlashCommand)
+async def ping(ctx: lightbulb.SlashContext) -> None:
+    logging.info("Ping received.")
+    await ctx.respond(f"Boing! Latency: {bot.heartbeat_latency * 1000:.2f}ms.")

@@ -17,7 +17,12 @@ Running BoomBot...
 
     load_dotenv()
 
-    env_vars = {'TOKEN'}
+    env_vars = {
+            'DISCORD_TOKEN',
+            'LAVALINK_IP',
+            'LAVALINK_PORT',
+            'LAVALINK_PASSWORD',
+            }
 
     if not env_vars.issubset(os.environ.keys()):
         raise Exception("Missing essential environmental variables for configuration")
