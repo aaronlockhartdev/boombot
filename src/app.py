@@ -19,7 +19,7 @@ Running BoomBot...
 
     env_vars = {
             'DISCORD_TOKEN',
-            'LAVALINK_IP',
+            'LAVALINK_HOST',
             'LAVALINK_PORT',
             'LAVALINK_PASSWORD',
             }

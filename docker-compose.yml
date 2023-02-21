@@ -15,7 +15,7 @@ services:
   lavalink:
     image: fredboat/lavalink:dev
     volumes:
-      - ./lavalink.yml:/opt/lavalink/application.yml:ro
+      - ./lavalink.yml:/opt/Lavalink/application.yml
 
 
     

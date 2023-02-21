@@ -56,19 +56,10 @@ async def _join(ctx: lightbulb.Context) -> Optional[hikari.Snowflake]:
 @plugin.listener(hikari.ShardReadyEvent)
 async def start_lavalink(event: hikari.ShardReadyEvent) -> None:
     """Event that triggers when the hikari gateway is ready."""
-    import socket
-    ip, port = os.getenv('LAVALINK_IP'), int(os.getenv('LAVALINK_PORT'))
-
-    try:
-        socket.inet_aton(ip)
-    except socket.error:
-        ip = socket.gethostbyname(ip)
-
-    logging.info(f"Connecting to lavalink at {ip}:{port}")
 
     builder = (
-        lavasnek_rs.LavalinkBuilder(event.my_user.id, os.getenv('DISCORD_TOKEN')).set_host(ip)
-                                                                                 .set_port(port)
+        lavasnek_rs.LavalinkBuilder(event.my_user.id, os.getenv('DISCORD_TOKEN')).set_host(os.getenv('LAVALINK_HOST'))
+                                                                                 .set_port(int(os.getenv('LAVALINK_PORT')))
                                                                                  .set_password(os.getenv('LAVALINK_PASSWORD'))
     )
 
