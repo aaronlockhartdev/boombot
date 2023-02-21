@@ -2,16 +2,11 @@ version: '3.9'
 services:
   boombot:
     build: .
-    links:
-      - lavalink
     environment:
       DISCORD_TOKEN: ${DISCORD_TOKEN}
       LAVALINK_PASSWORD: ${LAVALINK_PASSWORD}
       LAVALINK_HOST: lavalink
       LAVALINK_PORT: 2333
-    depends_on:
-      lavalink:
-        condition: service_started
 
   lavalink:
     image: fredboat/lavalink:dev
