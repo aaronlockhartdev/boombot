@@ -27,6 +27,7 @@ Running BoomBot...
     if not env_vars.issubset(os.environ.keys()):
         raise Exception("Missing essential environmental variables for configuration")
 
+    time.sleep(5)
 
     import boombot
     boombot.run()
