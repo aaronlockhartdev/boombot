@@ -220,3 +220,4 @@ pip-selfcheck.json
 
 lavalink.yml
 lavalink.yml.example
+lavalink/*

@@ -1,4 +1,3 @@
-# install uvloop
 import asyncio
 import uvloop
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
@@ -21,13 +20,12 @@ bot = lightbulb.BotApp(
 )
 
 @bot.listen()
-async def starting_load_extensions(_: hikari.StartingEvent) -> None:
-    """Load the music extension when Bot starts."""
-    bot.load_extensions("boombot.extensions.lavasnek")
+async def load_extensions(_: hikari.StartedEvent) -> None:
+    bot.load_extensions("boombot.extensions.lavaplayer")
 
 @bot.command()
 @lightbulb.command("ping", description="Latency test.")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def ping(ctx: lightbulb.SlashContext) -> None:
     logging.info("Ping received.")
-    await ctx.respond(f"Boing! Latency: {bot.heartbeat_latency * 1000:.2f}ms.")
+    await ctx.respond(f"Pong! Latency: {bot.heartbeat_latency * 1000:.2f}ms.")
