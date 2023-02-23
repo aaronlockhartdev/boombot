@@ -8,13 +8,9 @@ import logging
 import hikari
 import lightbulb
 
-from hikari import Intents
-
-INTENTS = Intents.ALL_GUILDS_UNPRIVILEGED
-
 bot = lightbulb.BotApp(
     os.getenv('DISCORD_TOKEN'),
-    intents=INTENTS,
+    intents=hikari.Intents.ALL_GUILDS_UNPRIVILEGED,
     banner=None,
     logs="INFO"
 )
@@ -22,6 +18,7 @@ bot = lightbulb.BotApp(
 @bot.listen()
 async def load_extensions(_: hikari.StartedEvent) -> None:
     bot.load_extensions("boombot.extensions.lavaplayer")
+    bot.load_extensions("boombot.extensions.miru")
 
 @bot.command()
 @lightbulb.command("ping", description="Latency test.")

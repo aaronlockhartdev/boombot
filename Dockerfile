@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y \
 FROM python:3.10
 
 # install package requirements
-RUN apt-get update && apt-get install -y \
-    ffmpeg
+#RUN apt-get update && apt-get install -y \
+#    ffmpeg
 
 # copy prepared venv and add to PATH
 COPY --from=build /opt/venv /opt/venv

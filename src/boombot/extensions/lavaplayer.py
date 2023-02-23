@@ -1,10 +1,15 @@
 import os
+import re
+import time
 import logging
 import asyncio
 
 import hikari
 import lightbulb
 import lavaplayer
+
+from boombot.views.lavaplayer import *
+from boombot.embeds.lavaplayer import *
 
 logging.info("Loading lavaplayer plugin")
 
@@ -50,17 +55,24 @@ async def play_command(ctx: lightbulb.context.Context):
     result = await lavalink.auto_search_tracks(query)  # search for the query
     if not result:
         await ctx.respond("not found result for your query")
-        return
     elif isinstance(result, lavaplayer.TrackLoadFailed):
         await ctx.respond("Track load failed, try again later.\n```{}```".format(result.message))
-        return
     elif isinstance(result, lavaplayer.PlayList):
         await lavalink.add_to_queue(ctx.guild_id, result.tracks, ctx.author.id)
         await ctx.respond(f"added {len(result.tracks)} tracks to queue")
-        return 
+    else:
+        track = result[0]
+        await lavalink.add_to_queue(ctx.guild_id, [track], ctx.author.id)  # play the first result
 
-    await lavalink.play(ctx.guild_id, result[0], ctx.author.id)  # play the first result
-    await ctx.respond(f"[{result[0].title}]({result[0].uri})")  # send the embed
+        view = PlayerView(lavalink, track, ctx.user)
+
+        msg = await ctx.respond(
+                embed=PlayerEmbed(track, ctx.user),
+                components=view
+                )
+
+        await view.start(msg)
+
 
 @plugin.command()
 @lightbulb.command(name="stop", description="Stop command", aliases=["s"])
