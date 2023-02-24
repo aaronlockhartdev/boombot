@@ -18,13 +18,14 @@ class PlayerEmbed(hikari.Embed):
 
         avatar = user.avatar_url if user.avatar_url else user.default_avatar_url
 
-        description=f"[{track.title}]({track.uri})\n`[0:00/{track_time}]`"
+        description=f"[{track.title}]({track.uri})\n`[0:00 / {track_time}]`"
 
         if last_action: description += "\n\n" + last_action
 
         super().__init__(
                 title="Now Playing ♫",
-                description=description)
+                description=description,
+                color=hikari.Color(0xd142f5))
 
         self.set_thumbnail(thumbnail) \
         .set_footer(

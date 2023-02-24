@@ -8,6 +8,8 @@ import hikari
 import lightbulb
 import lavaplayer
 
+from boombot.embeds.general import *
+
 from boombot.views.lavaplayer import *
 from boombot.embeds.lavaplayer import *
 
@@ -44,15 +46,19 @@ async def join_command(ctx: lightbulb.context.Context):
     channel_id = voice_state.channel_id
     await plugin.bot.update_voice_state(ctx.guild_id, channel_id, self_deaf=True)
     await lavalink.wait_for_connection(ctx.guild_id)
-    await ctx.respond(f"done join to <#{channel_id}>")
+    await ctx.respond(embed=InfoEmbed(
+        f"Boom bot has joined <#{channel_id}>!",
+        f"Nice to meetcha!"))
 
 @plugin.command()
 @lightbulb.option(name="query", description="query to search", required=True)
 @lightbulb.command(name="play", description="Play command", aliases=["p"])
 @lightbulb.implements(lightbulb.SlashCommand)
 async def play_command(ctx: lightbulb.context.Context):
-    query = ctx.options.query  # get query from options
-    result = await lavalink.auto_search_tracks(query)  # search for the query
+    if not await lavalink.get_guild_node(ctx.guild_id): await join_command(ctx)
+
+    query = ctx.options.query
+    result = await lavalink.auto_search_tracks(query)
     if not result:
         await ctx.respond("not found result for your query")
     elif isinstance(result, lavaplayer.TrackLoadFailed):
@@ -79,57 +85,37 @@ async def play_command(ctx: lightbulb.context.Context):
 @lightbulb.implements(lightbulb.SlashCommand)
 async def stop_command(ctx: lightbulb.context.Context):
     await lavalink.stop(ctx.guild_id)
-    await ctx.respond("done stop the music")
+    await ctx.respond(embed=InfoEmbed(
+        title="Music Stopped ♫",
+        msg=f"Music stopped by {ctx.user.username} ♪"))
+
 
 @plugin.command()
 @lightbulb.command(name="pause", description="Pause command")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def pause_command(ctx: lightbulb.context.Context):
     await lavalink.pause(ctx.guild_id, True)
-    await ctx.respond("The music is paused now")
+    await ctx.respond(embed=InfoEmbed(
+        title="Music Paused ♫",
+        msg=f"Music paused by {ctx.user.username} ♪"))
 
 @plugin.command()
 @lightbulb.command(name="resume", description="Resume command")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def resume_command(ctx: lightbulb.context.Context):
     await lavalink.pause(ctx.guild_id, False)
-    await ctx.respond("The music is resumed now")
-
-@plugin.command()
-@lightbulb.option(name="position", description="Position to seek", required=True)
-@lightbulb.command(name="seek", description="Seek command")
-@lightbulb.implements(lightbulb.SlashCommand)
-async def seek_command(ctx: lightbulb.context.Context):
-    position = ctx.options.position
-    await lavalink.seek(ctx.guild_id, position)
-    await ctx.respond(f"done seek to {position}")
-
-@plugin.command()
-@lightbulb.option(name="vol", description="Volume to set", required=True)
-@lightbulb.command(name="volume", description="Volume command")
-@lightbulb.implements(lightbulb.SlashCommand)
-async def volume_command(ctx: lightbulb.context.Context):
-    volume = ctx.options.vol
-    await lavalink.volume(ctx.guild_id, volume)
-    await ctx.respond(f"done set volume to {volume}%")
-
-@plugin.command()
-@lightbulb.command(name="destroy", description="Destroy command")
-@lightbulb.implements(lightbulb.SlashCommand)
-async def destroy_command(ctx: lightbulb.context.Context):
-    await lavalink.destroy(ctx.guild_id)
-    await ctx.respond("done destroy the bot")
+    await ctx.respond(embed=InfoEmbed(
+        title="Music Resumed ♫",
+        msg=f"Music paused by {ctx.user.username} ♪"))
 
 @plugin.command()
 @lightbulb.command(name="queue", description="Queue command")
 @lightbulb.implements(lightbulb.SlashCommand)
 async def queue_command(ctx: lightbulb.context.Context):
     node = await lavalink.get_guild_node(ctx.guild_id)
-    embed = hikari.Embed(
-        description="\n".join(
-            [f"{n+1}- [{i.title}]({i.uri})" for n, i in enumerate(node.queue)])
-    )
-    await ctx.respond(embed=embed)
+    await ctx.respond(embed=InfoEmbed(
+        title="Music Queue ♫",
+        msg="\n".join([f"{n+1}. [{i.title}]({i.uri})" for n, i in enumerate(node.queue)])))
 
 @plugin.command()
 @lightbulb.command(name="np", description="Now playing command")
@@ -165,7 +151,10 @@ async def shuffle_command(ctx: lightbulb.context.Context):
 @lightbulb.implements(lightbulb.SlashCommand)
 async def leave_command(ctx: lightbulb.context.Context):
     await plugin.bot.update_voice_state(ctx.guild_id, None)
-    await ctx.respond("done leave the voice channel")
+    await ctx.respond(embed=InfoEmbed(
+        f"Boom bot has left the channel",
+        f"Bye bye!"))
+
 # ------------------------------------- #
 
 @lavalink.listen(lavaplayer.TrackStartEvent)
