@@ -31,6 +31,27 @@ class PauseResumeButton(miru.Button):
                                  self.user,
                                  last_action=f"Player {'paused' if pause else 'resumed'} by {ctx.user.username} ♪"),
                 components=self.view)
+        
+
+class SkipButton(miru.Button):
+    def __init__(self,
+                 lavalink: lavaplayer.LavalinkClient,
+                 track: lavaplayer.Track,
+                 user: hikari.User,
+                 *args, **kwargs) -> None:
+        self.lavalink = lavalink
+        self.track = track
+        self.user = user
+
+        super().__init__(label="Skip", style=hikari.ButtonStyle.SECONDARY, *args, **kwargs)
+
+    async def callback(self, ctx: miru.ViewContext) -> None:
+        await self.lavalink.skip(ctx.guild_id)
+        await ctx.edit_response(
+                embed=PlayerEmbed(self.track,
+                                 self.user,
+                                 last_action=f"Player skipped by {ctx.user.username} ♪"),
+        )
 
 
 class PlayerView(miru.View):
