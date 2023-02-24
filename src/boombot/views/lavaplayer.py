@@ -63,3 +63,4 @@ class PlayerView(miru.View):
         super().__init__(*args, **kwargs)
 
         self.add_item(PauseResumeButton(lavalink, track, user))
+        self.add_item(SkipButton(lavalink, track, user))
